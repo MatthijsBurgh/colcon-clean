@@ -10,7 +10,7 @@ BASE_PATH = 'build'
 
 
 class BuildBaseHandler(BaseHandlerExtensionPoint):
-    """Determin how build paths for the workspace should be cleaned."""
+    """Determine how build paths for the workspace should be cleaned."""
 
     def __init__(self):  # noqa: D107
         super().__init__(BASE_PATH)

@@ -10,7 +10,7 @@ BASE_PATH = 'build'
 
 
 class TestResultBaseHandler(BaseHandlerExtensionPoint):
-    """Determin how test_result paths for the workspace should be cleaned."""
+    """Determine how test_result paths for the workspace should be cleaned."""
 
     __test__ = False
 

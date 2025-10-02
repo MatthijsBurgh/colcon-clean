@@ -8,7 +8,7 @@ BASE_PATH = 'log'
 
 
 class LogBaseHandler(BaseHandlerExtensionPoint):
-    """Determin how log paths for the workspace should be cleaned."""
+    """Determine how log paths for the workspace should be cleaned."""
 
     def __init__(self):  # noqa: D107
         super().__init__(BASE_PATH)
