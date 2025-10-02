@@ -14,12 +14,15 @@ from colcon_clean.subverb import (
     scan_directory,
 )
 from colcon_core.event_handler import add_event_handler_arguments
+from colcon_core.logging import colcon_logger
 from colcon_core.package_selection import add_arguments \
     as add_packages_arguments
 from colcon_core.package_selection import get_packages
 from colcon_core.plugin_system import satisfies_version
 from colcon_core.verb import check_and_mark_build_tool
-from colcon_core.verb import logger
+
+
+logger = colcon_logger.getChild(__name__)
 
 
 class PackagesCleanSubverb(CleanSubverbExtensionPoint):
