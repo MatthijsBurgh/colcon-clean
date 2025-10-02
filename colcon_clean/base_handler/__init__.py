@@ -1,6 +1,8 @@
 # Copyright 2016-2018 Dirk Thomas
 # Copyright 2021 Ruffin White
 # Licensed under the Apache License, Version 2.0
+from pathlib import Path
+from typing import List
 
 from colcon_core.plugin_system import instantiate_extensions
 from colcon_core.plugin_system import order_extensions_by_name
@@ -33,7 +35,7 @@ class BaseHandlerExtensionPoint:
         """
         raise NotImplementedError()
 
-    def get_workspace_paths(self, *, args):
+    def get_workspace_paths(self, *, args) -> List[Path]:
         """
         Get paths for a workspace.
 
@@ -45,7 +47,7 @@ class BaseHandlerExtensionPoint:
         """
         raise NotImplementedError()
 
-    def get_package_paths(self, *, args, pkg):
+    def get_package_paths(self, *, args, pkg) -> List[Path]:
         """
         Get paths for a package.
 

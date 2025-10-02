@@ -1,5 +1,7 @@
 # Copyright 2021 Ruffin White
 # Licensed under the Apache License, Version 2.0
+from pathlib import Path
+from typing import List
 
 from colcon_clean.base_handler import BaseHandlerExtensionPoint
 from colcon_core.package_descriptor import PackageDescriptor
@@ -23,8 +25,10 @@ class LogBaseHandler(BaseHandlerExtensionPoint):
             help='The base path for all log directories '
                  f'(default: {self.base_path})')
 
-    def get_workspace_paths(self, *, args):  # noqa: D102
-        return [args.log_base]
+    def get_workspace_paths(self, *, args) -> List[Path]:  # noqa: D102
+        return [Path(args.log_base)]
 
-    def get_package_paths(self, *, args, pkg: PackageDescriptor):  # noqa: D102
+    def get_package_paths(  # noqa: D102
+        self, *, args, pkg: PackageDescriptor
+    ) -> List[Path]:
         return []

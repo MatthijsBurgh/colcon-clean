@@ -9,7 +9,7 @@ if sys.version_info >= (3, 9):
     from collections.abc import Iterable
 else:
     from typing import Iterable
-from typing import List
+from typing import List, Set
 
 from colcon_clean.clean.query import query_yes_no
 from colcon_core.logging import colcon_logger
@@ -122,7 +122,7 @@ def add_clean_subverb_arguments(parser):
     )
 
 
-def scan_directory(directory, recursion_filter):
+def scan_directory(directory: Path, recursion_filter) -> Set[Path]:
     """
     Scan directory with recursion filter.
 

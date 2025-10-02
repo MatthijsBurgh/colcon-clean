@@ -29,10 +29,12 @@ class InstallBaseHandler(BaseHandlerExtensionPoint):
             help='The base path for all install directories '
                  f'(default: {self.base_path})')
 
-    def get_workspace_paths(self, *, args):  # noqa: D102
-        return [args.install_base]
+    def get_workspace_paths(self, *, args) -> List[Path]:  # noqa: D102
+        return [Path(args.install_base)]
 
-    def get_package_paths(self, *, args, pkg: PackageDescriptor):  # noqa: D102
+    def get_package_paths(  # noqa: D102
+        self, *, args, pkg: PackageDescriptor
+    ) -> List[Path]:
         paths: List[Path] = [
             Path(args.install_base) / pkg.name,
             Path(args.install_base) / 'share' / pkg.name,

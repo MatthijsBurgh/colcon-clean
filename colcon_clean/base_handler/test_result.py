@@ -2,6 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 
 from pathlib import Path
+from typing import List
 
 from colcon_clean.base_handler import BaseHandlerExtensionPoint
 from colcon_core.package_descriptor import PackageDescriptor
@@ -27,8 +28,10 @@ class TestResultBaseHandler(BaseHandlerExtensionPoint):
             help='The base path for all test_result directories '
                  f'(default: {self.base_path})')
 
-    def get_workspace_paths(self, *, args):  # noqa: D102
-        return [args.test_result_base]
+    def get_workspace_paths(self, *, args) -> List[Path]:  # noqa: D102
+        return [Path(args.test_result_base)]
 
-    def get_package_paths(self, *, args, pkg: PackageDescriptor):  # noqa: D102
+    def get_package_paths(  # noqa: D102
+        self, *, args, pkg: PackageDescriptor
+    ) -> List[Path]:
         return [Path(args.test_result_base) / pkg.name]
