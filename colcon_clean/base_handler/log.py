@@ -2,6 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 
 from colcon_clean.base_handler import BaseHandlerExtensionPoint
+from colcon_core.package_descriptor import PackageDescriptor
 from colcon_core.plugin_system import satisfies_version
 
 BASE_PATH = 'log'
@@ -25,5 +26,5 @@ class LogBaseHandler(BaseHandlerExtensionPoint):
     def get_workspace_paths(self, *, args):  # noqa: D102
         return [args.log_base]
 
-    def get_package_paths(self, *, args, pkg):  # noqa: D102
+    def get_package_paths(self, *, args, pkg: PackageDescriptor):  # noqa: D102
         return []
