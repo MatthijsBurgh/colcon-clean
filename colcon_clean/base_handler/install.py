@@ -4,8 +4,11 @@
 from pathlib import Path
 
 from colcon_clean.base_handler import BaseHandlerExtensionPoint
+from colcon_core.logging import colcon_logger
 from colcon_core.package_descriptor import PackageDescriptor
 from colcon_core.plugin_system import satisfies_version
+
+logger = colcon_logger.getChild(__name__)
 
 BASE_PATH = 'install'
 
@@ -29,7 +32,26 @@ class InstallBaseHandler(BaseHandlerExtensionPoint):
         return [args.install_base]
 
     def get_package_paths(self, *, args, pkg: PackageDescriptor):  # noqa: D102
-        return [
+        paths: List[Path] = [
             Path(args.install_base) / pkg.name,
             Path(args.install_base) / 'share' / pkg.name,
-            ]
+        ]
+        if hasattr(args, 'build_base'):
+            manifest_path = (
+                Path(args.build_base) / pkg.name / 'install_manifest.txt'
+            )
+            if not manifest_path.is_file():
+                logger.debug(
+                    f'No {manifest_path.name} found for {pkg.name} at '
+                    f"'{manifest_path}'"
+                )
+                return paths
+            with manifest_path.open() as f:
+                for line in f:
+                    paths.append(Path(line.strip()))
+        else:
+            logger.warning(
+                "'build_base' argument not found, "
+                "skipping 'install_manifest.txt' parsing"
+            )
+        return paths
