@@ -28,4 +28,7 @@ class InstallBaseHandler(BaseHandlerExtensionPoint):
         return [args.install_base]
 
     def get_package_paths(self, *, args, pkg):  # noqa: D102
-        return [Path(args.install_base) / pkg.name]
+        return [
+            Path(args.install_base) / pkg.name,
+            Path(args.install_base) / 'share' / pkg.name,
+            ]
