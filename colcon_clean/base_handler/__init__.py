@@ -4,6 +4,7 @@
 from pathlib import Path
 from typing import List
 
+from colcon_core.package_descriptor import PackageDescriptor
 from colcon_core.plugin_system import instantiate_extensions
 from colcon_core.plugin_system import order_extensions_by_name
 
@@ -47,7 +48,7 @@ class BaseHandlerExtensionPoint:
         """
         raise NotImplementedError()
 
-    def get_package_paths(self, *, args, pkg) -> List[Path]:
+    def get_package_paths(self, *, args, pkg: PackageDescriptor) -> List[Path]:
         """
         Get paths for a package.
 
