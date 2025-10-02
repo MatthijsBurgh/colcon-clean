@@ -2,6 +2,7 @@
 # Licensed under the Apache License, Version 2.0
 
 from pathlib import Path
+from typing import List
 
 from colcon_clean.base_handler import BaseHandlerExtensionPoint
 from colcon_core.logging import colcon_logger

@@ -2,9 +2,14 @@
 # Copyright 2021 Ruffin White
 # Licensed under the Apache License, Version 2.0
 
-import os
 from pathlib import Path
 import shutil
+import sys
+if sys.version_info >= (3, 9):
+    from collections.abc import Iterable
+else:
+    from typing import Iterable
+from typing import List
 
 from colcon_clean.clean.query import query_yes_no
 from colcon_core.logging import colcon_logger
@@ -216,7 +221,7 @@ def get_subverb_extensions():
     return order_extensions_by_name(extensions)
 
 
-def clean_paths(paths, confirmed=False):
+def clean_paths(paths: Iterable[Path], confirmed: bool = False) -> None:
     """
     Clean provided paths with conformation.
 
@@ -229,17 +234,20 @@ def clean_paths(paths, confirmed=False):
         print(message)
         return
 
+    paths = sorted(paths)
+    paths = _filter_paths(paths)
+
     cwd_path = Path.cwd()
     if not confirmed:
         print('Paths:')
-        relpaths = (os.path.relpath(path, cwd_path) for path in paths)
-        for path in sorted(relpaths):
+        relpaths = (path.relative_to(cwd_path) for path in paths)
+        for path in relpaths:
             print('    ', path)
         question = 'Clean the above paths?'
         confirmed = query_yes_no(question)
 
     if confirmed:
-        for path in sorted(paths):
+        for path in paths:
             _clean_path(path)
 
 
@@ -259,7 +267,7 @@ def _onexc(func, path, excinfo):  # pragma: no cover
     raise
 
 
-def _clean_path(path):
+def _clean_path(path: Path):
     logger.info(f"Cleaning path: '{path}'")
     if path.is_dir():
         try:
@@ -267,5 +275,38 @@ def _clean_path(path):
         except TypeError:
             # TODO: Remove when minimum python version is 3.12
             shutil.rmtree(path, onerror=_onerror)
-    else:
+    elif path.exists():
         path.unlink()
+    else:
+        logger.warning(f"Path does not exist (anymore): '{path}'")
+
+
+def _filter_paths(paths: Iterable[Path]) -> List[Path]:
+    # Convert to absolute, normalized Path objects
+    paths = sorted(
+        {p.resolve() for p in paths}
+    )  # Sorted, so parents come before children
+
+    result = []
+    if sys.version_info >= (3, 9):
+        for path in paths:
+            if not any(path.is_relative_to(parent) for parent in result):
+                result.append(path)
+            else:
+                logger.debug(f"Skipping path: '{path}' as it is a child path")
+    else:
+        # TODO: Remove when minimum python version is >=3.9
+        def _is_relative_to(child: Path, parent: Path) -> bool:
+            try:
+                child.relative_to(parent)
+                return True
+            except ValueError:
+                return False
+
+        for path in paths:
+            if not any(_is_relative_to(path, parent) for parent in result):
+                result.append(path)
+            else:
+                logger.debug(f"Skipping path: '{path}' as it is a child path")
+
+    return result
