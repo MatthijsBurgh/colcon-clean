@@ -237,7 +237,7 @@ def clean_paths(paths: Iterable[Path], confirmed: bool = False) -> None:
     paths = sorted(paths)
     paths = _filter_paths(paths)
 
-    cwd_path = Path.cwd()
+    cwd_path = Path().resolve()
     if not confirmed:
         print('Paths:')
         relpaths = (path.relative_to(cwd_path) for path in paths)
