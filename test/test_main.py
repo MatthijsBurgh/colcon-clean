@@ -22,7 +22,7 @@ argparse.ArgumentParser.error = _raising_error
 def test_main(monkeypatch):
     """System test for colcon clean CLI."""
     ws_base = Path(mkdtemp(prefix='test_colcon_'))
-    resources_base = Path('test', 'resources').absolute()
+    resources_base = (Path(__file__).parent / 'resources').absolute()
     shutil.copytree(resources_base / 'test_src', ws_base / 'src')
 
     os.chdir(ws_base)
@@ -36,6 +36,18 @@ def test_main(monkeypatch):
     try:
         main(argv=argv + ['build'])
         main(argv=argv + ['test'])
+
+        assert (ws_base / 'build' / 'test-package-a').exists()
+        assert (ws_base / 'install' / 'test-package-a').exists()
+        assert (ws_base / 'test_results' / 'test-package-a').exists()
+        assert (ws_base / 'build' / 'test-package-b').exists()
+        assert (ws_base / 'build' / 'test-package-c').exists()
+        assert (ws_base / 'build' / 'test-package-d' /
+                'install_manifest.txt').exists()
+        assert (ws_base / 'install' / 'test-package-b').exists()
+        assert (ws_base / 'install' / 'test-package-c').exists()
+        assert (ws_base / 'test_results' / 'test-package-b').exists()
+        assert (ws_base / 'test_results' / 'test-package-c').exists()
 
         # Clean all package base paths explicitly
         main(argv=argv + ['clean', 'packages', '--yes', \
