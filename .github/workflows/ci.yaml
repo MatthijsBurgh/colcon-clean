@@ -1,6 +1,9 @@
 ---
 name: Run tests
 
+env:
+  VisualStudioVersion: "17.0"
+
 on:
   push:
   pull_request:
